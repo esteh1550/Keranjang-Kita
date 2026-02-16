@@ -1,0 +1,7 @@
+{
+  "name": "Keranjang Kita",
+  "description": "Asisten belanja cerdas untuk scan barcode dan hitung total belanja secara real-time.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
