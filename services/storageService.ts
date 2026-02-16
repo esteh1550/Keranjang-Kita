@@ -130,3 +130,31 @@ export const searchProducts = (query: string): ProductSuggestion[] => {
 
   return results;
 };
+
+export const getAllProducts = (): ProductSuggestion[] => {
+  // 1. Load User History
+  let history: ProductSuggestion[] = [];
+  try {
+    const raw = localStorage.getItem(PRODUCT_DICT_KEY);
+    history = raw ? JSON.parse(raw) : [];
+  } catch (e) { console.error(e); }
+
+  // 2. Combine with Seed Data
+  const combined = [...history, ...SEED_PRODUCTS];
+
+  // 3. Deduplicate
+  const uniqueProducts = new Map<string, ProductSuggestion>();
+  
+  combined.forEach(item => {
+    // Gunakan nama lowercase sebagai key untuk deduplikasi
+    // Karena history ada di awal array (dan kita iterasi dari awal), 
+    // jika ada duplikat, yang pertama (history terbaru) yang akan diambil (map.set akan overwrite jika kita tidak cek has, tapi kita mau yang pertama jika kita balik, atau biarkan overwrite jika ingin yang terakhir)
+    // Strategi: Jika belum ada, masukkan. Ini memprioritaskan history (jika history di load duluan dan ada di atas)
+    if (!uniqueProducts.has(item.name.toLowerCase())) {
+        uniqueProducts.set(item.name.toLowerCase(), item);
+    }
+  });
+
+  // 4. Convert to array and sort alphabetically
+  return Array.from(uniqueProducts.values()).sort((a, b) => a.name.localeCompare(b.name));
+};

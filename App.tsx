@@ -1,8 +1,10 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { Scan, Trash2, Plus, Minus, ShoppingCart, ShoppingBag, XCircle, User, LogOut, Crown } from 'lucide-react';
+import { Scan, Trash2, Plus, Minus, ShoppingCart, ShoppingBag, XCircle, User, LogOut, Crown, BookOpen, Globe } from 'lucide-react';
 import Scanner from './components/Scanner';
 import ProductModal from './components/ProductModal';
 import MemberLoginModal from './components/MemberLoginModal';
+import ProductListModal from './components/ProductListModal';
+import CatalogModal from './components/CatalogModal';
 import { CartItem, Member } from './types';
 import { saveCart, loadCart, savePrice, getPriceForBarcode, saveProductToDictionary } from './services/storageService';
 import { fetchProductByBarcode } from './services/apiService';
@@ -14,6 +16,8 @@ const App: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [showClearConfirm, setShowClearConfirm] = useState(false);
   const [showMemberLogin, setShowMemberLogin] = useState(false);
+  const [showProductList, setShowProductList] = useState(false);
+  const [showCatalog, setShowCatalog] = useState(false);
   
   // Member State
   const [member, setMember] = useState<Member | null>(null);
@@ -177,7 +181,23 @@ const App: React.FC = () => {
                     <ShoppingBag size={20} />
                     Keranjang Kita
                 </h1>
-                <span className="text-gray-500 text-sm font-medium">{totalItems} Barang</span>
+                <div className="flex items-center gap-2">
+                   <button 
+                     onClick={() => setShowCatalog(true)}
+                     className="p-1.5 text-blue-600 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"
+                     aria-label="Cek Katalog API"
+                   >
+                     <Globe size={18} />
+                   </button>
+                   <button 
+                     onClick={() => setShowProductList(true)}
+                     className="p-1.5 text-emerald-600 bg-emerald-50 hover:bg-emerald-100 rounded-lg transition-colors"
+                     aria-label="Daftar Produk Lokal"
+                   >
+                     <BookOpen size={18} />
+                   </button>
+                   <span className="text-gray-500 text-sm font-medium ml-1">{totalItems} Barang</span>
+                </div>
             </div>
 
             {/* Total Amount (Main) */}
@@ -340,6 +360,19 @@ const App: React.FC = () => {
         onClose={() => setShowModal(false)}
         onSave={addToCart}
         isLoading={isLoadingProduct}
+      />
+
+      {/* Product List Modal (Local) */}
+      <ProductListModal
+        isOpen={showProductList}
+        onClose={() => setShowProductList(false)}
+        onAddProduct={addToCart}
+      />
+
+      {/* Catalog Modal (API) */}
+      <CatalogModal
+        isOpen={showCatalog}
+        onClose={() => setShowCatalog(false)}
       />
 
       {/* Member Login Modal */}
