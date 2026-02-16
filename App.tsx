@@ -141,8 +141,8 @@ const App: React.FC = () => {
     setShowClearConfirm(false);
   };
 
-  const handleMemberLogin = async (name: string, last4Phone: string): Promise<boolean> => {
-    const foundMember = await fetchAndValidateMember(name, last4Phone);
+  const handleMemberLogin = async (memberId: string): Promise<boolean> => {
+    const foundMember = await fetchAndValidateMember(memberId);
     if (foundMember) {
       setMember(foundMember);
       saveMemberSession(foundMember);
