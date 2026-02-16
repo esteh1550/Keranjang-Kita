@@ -25,3 +25,9 @@ export interface Member {
   level: string;
   discountPercentage: number;
 }
+
+export interface ProductSuggestion {
+  name: string;
+  price: number;
+  source: 'history' | 'database';
+}

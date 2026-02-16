@@ -4,7 +4,7 @@ import Scanner from './components/Scanner';
 import ProductModal from './components/ProductModal';
 import MemberLoginModal from './components/MemberLoginModal';
 import { CartItem, Member } from './types';
-import { saveCart, loadCart, savePrice, getPriceForBarcode } from './services/storageService';
+import { saveCart, loadCart, savePrice, getPriceForBarcode, saveProductToDictionary } from './services/storageService';
 import { fetchProductByBarcode } from './services/apiService';
 import { fetchAndValidateMember, getMemberSession, saveMemberSession, clearMemberSession } from './services/memberService';
 
@@ -92,6 +92,9 @@ const App: React.FC = () => {
     if (currentBarcode) {
       savePrice(currentBarcode, price);
     }
+    
+    // Save to product dictionary for future suggestions
+    saveProductToDictionary(name, price);
 
     setCart(prev => {
       // Check if item exists (by barcode if available, else by name)
