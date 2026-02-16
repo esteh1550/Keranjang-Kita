@@ -48,13 +48,13 @@ const CatalogModal: React.FC<CatalogModalProps> = ({ isOpen, onClose }) => {
         onClick={onClose}
       />
 
-      <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl relative z-10 overflow-hidden flex flex-col max-h-[85vh] animate-in fade-in zoom-in duration-200">
+      <div className="bg-white w-full max-w-lg rounded-2xl shadow-2xl relative z-10 overflow-hidden flex flex-col h-[85vh] animate-in fade-in zoom-in duration-200">
         
         {/* Header */}
-        <div className="bg-blue-600 p-4 text-white flex justify-between items-center">
+        <div className="bg-blue-600 p-4 text-white flex justify-between items-center shrink-0">
             <div className="flex items-center gap-2">
                 <Globe size={20} />
-                <h2 className="text-lg font-bold">Cek Katalog API</h2>
+                <h2 className="text-lg font-bold">Cek Katalog Global</h2>
             </div>
             <button onClick={onClose} className="p-1.5 bg-blue-700 rounded-full hover:bg-blue-800 transition-colors">
                 <X size={20} />
@@ -62,7 +62,7 @@ const CatalogModal: React.FC<CatalogModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Search Input */}
-        <div className="p-4 border-b border-gray-100 bg-gray-50">
+        <div className="p-4 border-b border-gray-100 bg-gray-50 shrink-0">
             <form onSubmit={handleSearch} className="flex gap-2">
                 <div className="relative flex-1">
                     <Search className="absolute left-3 top-3 text-gray-400" size={18} />
@@ -78,7 +78,7 @@ const CatalogModal: React.FC<CatalogModalProps> = ({ isOpen, onClose }) => {
                 <button 
                     type="submit" 
                     disabled={isLoading || !query}
-                    className="bg-blue-600 text-white px-4 py-2 rounded-xl font-medium hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2"
+                    className="bg-blue-600 text-white px-4 py-2 rounded-xl font-medium hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition-colors flex items-center gap-2 min-w-[80px] justify-center"
                 >
                     {isLoading ? <Loader2 className="animate-spin" size={18} /> : 'Cari'}
                 </button>
@@ -86,24 +86,36 @@ const CatalogModal: React.FC<CatalogModalProps> = ({ isOpen, onClose }) => {
         </div>
 
         {/* Content Area */}
-        <div className="flex-1 overflow-y-auto p-4 bg-white">
-            {!hasSearched && (
-                <div className="flex flex-col items-center justify-center h-48 text-gray-400 text-center">
+        <div className="flex-1 overflow-y-auto p-4 bg-white relative">
+            {/* Initial State */}
+            {!hasSearched && !isLoading && (
+                <div className="flex flex-col items-center justify-center h-full text-gray-400 text-center -mt-8">
                     <Globe size={48} className="mb-3 opacity-20" />
-                    <p className="text-sm">Cari produk dari database eksternal<br/>(ariph007 API)</p>
+                    <p className="text-sm">Cari produk dari database global<br/>(OpenFoodFacts)</p>
                 </div>
             )}
 
+            {/* Loading State - Explicit Feedback */}
+            {isLoading && (
+                <div className="flex flex-col items-center justify-center h-full text-center -mt-8">
+                    <Loader2 size={40} className="text-blue-600 animate-spin mb-4" />
+                    <h3 className="font-semibold text-slate-700">Sedang mencari produk...</h3>
+                    <p className="text-xs text-gray-400 mt-2 max-w-[200px]">Pencarian database global mungkin membutuhkan waktu beberapa detik.</p>
+                </div>
+            )}
+
+            {/* Empty State */}
             {hasSearched && !isLoading && results.length === 0 && (
-                <div className="flex flex-col items-center justify-center h-48 text-gray-500 text-center">
+                <div className="flex flex-col items-center justify-center h-full text-gray-500 text-center -mt-8">
                     <AlertCircle size={48} className="mb-3 text-gray-300" />
                     <p className="font-medium">Tidak ada hasil ditemukan.</p>
                     <p className="text-xs text-gray-400 mt-1">Coba kata kunci lain atau cek ejaan.</p>
                 </div>
             )}
 
-            {results.length > 0 && (
-                <div className="border border-gray-200 rounded-lg overflow-hidden">
+            {/* Results List */}
+            {!isLoading && results.length > 0 && (
+                <div className="border border-gray-200 rounded-lg overflow-hidden mb-2">
                     <table className="w-full text-left text-sm">
                         <thead className="bg-gray-100 text-gray-600 font-semibold border-b border-gray-200">
                             <tr>
@@ -144,8 +156,8 @@ const CatalogModal: React.FC<CatalogModalProps> = ({ isOpen, onClose }) => {
         
         {/* Footer */}
         {results.length > 0 && (
-            <div className="bg-gray-50 p-2 text-center text-xs text-gray-400 border-t border-gray-100">
-                Data provided by api-product-indonesia
+            <div className="bg-gray-50 p-2 text-center text-xs text-gray-400 border-t border-gray-100 shrink-0">
+                Data provided by OpenFoodFacts
             </div>
         )}
       </div>
